@@ -32,3 +32,5 @@ Check [Piper's Issues](https://github.com/OHF-Voice/piper1-gpl/issues?q=is%3Aiss
 What I've faced was, the latest torch is too new, so I needed to downgrade that. 
 
 Also, as the `python3 -m pip install -e .[train]` is not perfect, I needed to install a package/library manually.
+
+Furthermore, if you plan to train on a new set of data, make sure to remove the files in the cache directory. 
