@@ -165,6 +165,10 @@ def refactor_to_speech(text):
     text = re.sub(pattern, replacement, text)
     # replace MSci to MSc
     text = re.sub(r"msci", "MSc", text, flags=re.IGNORECASE)
+    # replacing physics formulas
+    text = re.sub(r'=mc\u00b2', r'= m c squared', text, flags=re.IGNORECASE)
+    text = re.sub(r'=mc', r'= m c', text, flags=re.IGNORECASE)
+    text = re.sub(r'\u00b2', r'squared', text, flags=re.IGNORECASE)
     return text
 
 

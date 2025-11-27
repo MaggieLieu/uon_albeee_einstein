@@ -30,18 +30,42 @@ body {
   background: linear-gradient(135deg, #5FC3C0 0%, #AFE1DF 100%);
   color: black;
   padding: 20px;
-  text-align: center;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.chat-header h1 {
+.header-logo {
+  height: 60px;
+  width: 163px;
+  margin-right: 0px;
+  margin-left: 30px;
+  background-image: url('/static/UoN-Nottingham-Blue-Logo.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.header-text-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.header-text-wrapper h1 {
   font-size: 24px;
-  margin-bottom: 5px;
+  margin: 0 15% 0 15%;
+  line-height: 1.2;
+  display: block;
 }
 
-.chat-header p {
+.header-text-wrapper p {
   font-size: 14px;
   opacity: 0.9;
+  margin: 5px 15% 0 15%;
+  display: block;
 }
 
 .chat-messages {
@@ -300,4 +324,59 @@ button:disabled {
 
 .config-section label {
   color: #666;
+}
+
+
+@media (max-width: 768px) {
+  .header-logo {
+    height: 60px;
+    width: 61px;
+    background-image: url('/static/UoN-Nottingham-Blue-Logo-small.png');
+    margin-right: 10px;
+  }
+
+  .header-text-wrapper h1 {
+    font-size: 16px;
+    margin: 0 5% 0 5%;
+  }
+
+  .header-text-wrapper p {
+    font-size: 11px;
+    margin: 5px 5% 0 5%;
+  }
+
+  button span {
+    margin: 0;
+  }
+
+  #sendBtn span+text,
+  #voiceBtn span+text {
+    display: none;
+  }
+
+  .button-text {
+    display: none;
+  }
+
+  .input-wrapper {
+    gap: 8px;
+  }
+
+  #messageInput {
+    flex: 1;
+    min-width: 0;
+    /* Allow input to shrink below its content size */
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  button {
+    padding: 12px;
+    min-width: 44px;
+    justify-content: center;
+  }
+
+  button .emoji {
+    margin: 0;
+  }
 }
