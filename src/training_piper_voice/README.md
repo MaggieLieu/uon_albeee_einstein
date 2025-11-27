@@ -2,6 +2,8 @@
 [Piper](https://github.com/OHF-Voice/piper1-gpl/tree/main) is a fast and local neural text-to-speech engine. However, it requires much data to train the voice model. 
 Therefore, we utilised [Coqui TTS](https://github.com/idiap/coqui-ai-TTS), which support zero-shot voice cloning, to generate the training data for training a Piper model.
 
+The reason for using Piper over Coqui TTS is that Piper is quicker than Coqui TTS, which enhances the user experience of 'live chatting'.
+
 ## Coqui TTS zero-shot voice cloning
 
 ### Install Coqui TTS
