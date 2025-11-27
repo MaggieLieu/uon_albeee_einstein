@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat with Einstein</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+  <div class="chat-container">
+    <div class="chat-header">
+      <h1>🧠 Chat with Einstein</h1>
+      <p>Ask me anything about the University of Nottingham and the School of Physics and Astronomy!</p>
+    </div>
+
+    <div class="config-section">
+      <div class="id-group">
+        <label>User ID:</label>
+        <input type="text" id="userId" value="user_id" placeholder="u_123" disabled>
+      </div>
+      
+      <div class="id-group">
+        <label>Session ID:</label>
+        <input type="text" id="sessionId" value="session_id" placeholder="s_123">
+      </div>
+      
+      <button id="sessionBtn"><span>🔧</span> Config</button>
+    </div>
+
+    <div id="statusBar" class="status-bar"></div>
+
+    <div class="chat-messages" id="chatMessages">
+      <div class="message assistant">
+        <div>
+          <div class="message-label">Einstein</div>
+          <div class="message-content">Hello! I'm Albeee Einstein. Ask me anything about the University of Nottingham and the School of Physics and Astronomy!</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-input-container">
+      <div class="input-wrapper">
+        <input type="text" id="messageInput" placeholder="Type your message here..." autocomplete="off">
+        <button id="sendBtn">
+          <span>📤</span> Send
+        </button>
+        <button id="voiceBtn">
+          <span>🎤</span> Voice
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/script.js" type="module"></script>
+</body>
+
+</html>
