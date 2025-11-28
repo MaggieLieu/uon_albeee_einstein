@@ -27,3 +27,7 @@ On PC, the Single Page Application (SPA) looks:
 
 On phone, the SPA looks: 
 ![demo_phone](/docs/img/demo_phone.png)
+
+
+## Disclaimer
+I do not have enough knowledge to sort all the security out. So please do not host the server as public unless you know exactly what you are doing.
