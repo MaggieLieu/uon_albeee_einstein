@@ -20,3 +20,10 @@ uon-albeee-einstein
 You can get your secret API key from [Google AI Studio](https://aistudio.google.com/app/api-keys).
 
 5. Access the page by entering the url: https://YOUR_HOST_IP_ADDRESS:PORT_YOU_WANT_2 in any web browser. It should be accessible from all devices connected to the same LAN. 
+
+## UI Demo
+On PC, the Single Page Application (SPA) looks: 
+![demo_pc](/docs/img/demo_pc.png)
+
+On phone, the SPA looks: 
+![demo_phone](/docs/img/demo_phone.png)
