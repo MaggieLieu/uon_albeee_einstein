@@ -64,7 +64,7 @@ function addMessage(role, content, isPartial = false) {
 }
 
 // Show typing indicator
-function showTypingIndicator(role='einstein') {
+function showTypingIndicator(role = 'einstein') {
   const msgLabel = (role === 'user') ? 'You' : 'Einstein';
   const typingDiv = document.createElement('div');
   typingDiv.className = `message ${role}`;
@@ -409,8 +409,21 @@ voiceBtn.addEventListener('click', async () => {
   } else {
     // Start recording
     try {
+      // Check if getUserMedia is available in secure context
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error('getUserMedia not supported. Ensure you are using HTTPS or localhost.');
+      }
+
+      // Detect supported MIME type
+      const getSupportedMimeType = () => {
+        const types = ['audio/webm', 'audio/mp4', 'audio/ogg', 'audio/wav'];
+        return types.find(type => MediaRecorder.isTypeSupported(type)) || 'audio/webm';
+      };
+
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+      const mimeType = getSupportedMimeType();
+
+      mediaRecorder = new MediaRecorder(stream, { mimeType });
       audioChunks = [];
 
       mediaRecorder.ondataavailable = (event) => {
@@ -418,7 +431,7 @@ voiceBtn.addEventListener('click', async () => {
       };
 
       mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        const audioBlob = new Blob(audioChunks, { type: mimeType });
         await sendVoiceMessage(audioBlob);
         stream.getTracks().forEach(track => track.stop());
       };
@@ -430,7 +443,17 @@ voiceBtn.addEventListener('click', async () => {
       voiceBtn.innerHTML = '<span>⏹️</span> Stop';
       showStatus('Recording... Click Stop when done', 0);
     } catch (error) {
+      console.error('Microphone error:', error);
       showStatus('Error accessing microphone: ' + error.message);
+
+      // Provide helpful guidance
+      if (error.name === 'NotAllowedError') {
+        showStatus('Microphone permission denied. Please allow access in your browser settings.');
+      } else if (error.name === 'NotFoundError') {
+        showStatus('No microphone found. Please connect a microphone.');
+      } else if (error.message.includes('secure context')) {
+        showStatus('Please access this page via HTTPS or localhost.');
+      }
     }
   }
 });
