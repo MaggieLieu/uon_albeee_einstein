@@ -34,4 +34,4 @@ EXPOSE 80 443
 
 # Start all services with supervisor
 RUN chmod +x /usr/src/app/start_app.sh
-CMD ["/usr/src/app/start_app.sh"]
+CMD ["bash", "/usr/src/app/start_app.sh"]
