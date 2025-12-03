@@ -25,9 +25,8 @@ COPY nginx.conf /etc/nginx/nginx.conf
 COPY supervisor.conf /etc/supervisor.conf
 
 # Ensure scripts are executable
-RUN chmod +x generate_ssl.sh
-RUN chmod +x set_api_key.sh
-RUN chmod +x set_ffmpeg_path.sh
+RUN find /usr/src/app -name "*.sh" -exec sed -i 's/\r$//' {} \; && \
+    chmod +x /usr/src/app/*.sh
 
 # Expose ONLY nginx port
 EXPOSE 80 443
