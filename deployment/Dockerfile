@@ -23,11 +23,10 @@ COPY . .
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY supervisor.conf /etc/supervisor.conf
 
-COPY generate_ssl.sh . 
+# Ensure scripts are executable
 RUN chmod +x generate_ssl.sh
-
-# Ensure script is executable
 RUN chmod +x set_api_key.sh
+RUN chmod +x set_ffmpeg_path.sh
 
 # Expose ONLY nginx port
 EXPOSE 80 443
