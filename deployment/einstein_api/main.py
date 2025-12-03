@@ -42,7 +42,15 @@ MODEL_PATH = (
 )
 if not os.path.exists(MODEL_PATH):
     raise RuntimeError(f"Model not found: {MODEL_PATH}")
-voice = PiperVoice.load(MODEL_PATH, use_cuda=True)
+
+try:
+    voice = PiperVoice.load(MODEL_PATH, use_cuda=True)
+    print("Model loaded successfully on GPU (CUDA).")
+except Exception as e:
+    # Fall back to the CPU
+    voice = PiperVoice.load(MODEL_PATH, use_cuda=False)
+
+
 SAMPLE_RATE = 22050
 
 ADK_BASE_URL = "http://127.0.0.1:8965"
