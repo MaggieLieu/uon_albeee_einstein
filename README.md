@@ -5,7 +5,7 @@ Albeee is prompted to answer any questions about the University of Nottingham an
 
 ## Run Docker container
 0. Install Docker
-1. Clone the repo.
+1. Clone the repo. **You need `git lfs` to pull the Piper model successfully.**
 2. `cd deployment`
 3. `docker build -t uon-albeee-einstein .`
 4. Run the container:
