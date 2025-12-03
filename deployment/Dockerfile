@@ -6,7 +6,8 @@ RUN apt-get update && \
         ffmpeg \
         nginx \
         supervisor \
-        openssl && \
+        openssl \
+        bash &&
     rm -rf /var/lib/apt/lists/*
 
 # Set workdir
