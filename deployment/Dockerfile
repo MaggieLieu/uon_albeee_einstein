@@ -7,7 +7,7 @@ RUN apt-get update && \
         nginx \
         supervisor \
         openssl \
-        bash &&
+        bash && \
     rm -rf /var/lib/apt/lists/*
 
 # Set workdir
