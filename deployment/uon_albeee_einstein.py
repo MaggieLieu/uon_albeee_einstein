@@ -1,6 +1,8 @@
 import streamlit as st
 import os
 from uon_agent_albeee.agent import root_agent
+from google.adk.runners import InMemoryRunner
+from google.genai import types
 
 # Set up API key
 # Option 1: From Streamlit secrets
@@ -73,28 +75,38 @@ if prompt := st.chat_input("Ask me about Physics & Astronomy at UoN..."):
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
             try:
-                # Generate response using the agent
-                response = root_agent.generate_content(prompt)
+                # 1. Initialize the runner with your agent
+                runner = InMemoryRunner(agent=root_agent)
                 
-                # Extract the text response
-                response_text = response.text if hasattr(response, 'text') else str(response)
+                # 2. Format the message correctly for ADK
+                user_content = types.Content(
+                    role="user",
+                    parts=[types.Part.from_text(text=prompt)]
+                )
+    
+                # 3. Run the agent (use session_id to maintain history if desired)
+                # For a simple stateless feel, you can use a fixed session_id
+                events = runner.run(
+                    user_id="streamlit_user",
+                    session_id="default_session",
+                    new_message=user_content
+                )
+    
+                response_text = ""
+                for event in events:
+                    # Check for the final text response from the agent
+                    if event.is_final_response() and event.content.parts:
+                        response_text = event.content.parts[0].text
                 
-                # Display response
+                if not response_text:
+                    response_text = "I couldn't generate a response."
+    
+                # 4. Display and save the response
                 st.markdown(response_text)
-                
-                # Add assistant response to chat history
-                st.session_state.messages.append({
-                    "role": "assistant",
-                    "content": response_text
-                })
-                
+                st.session_state.messages.append({"role": "assistant", "content": response_text})
+
             except Exception as e:
-                error_msg = f"Sorry, I encountered an error: {str(e)}"
-                st.error(error_msg)
-                st.session_state.messages.append({
-                    "role": "assistant",
-                    "content": error_msg
-                })
+                st.error(f"Error: {str(e)}")
 
 # Sidebar with additional info
 with st.sidebar:
