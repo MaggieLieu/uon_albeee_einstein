@@ -1,41 +1,55 @@
 import streamlit as st
 import os
+from google.adk.runners import InMemoryRunner # New import
+from google.genai import types # Required for message formatting
 from uon_agent_albeee.agent import root_agent
 
-# --- 1. CONFIG & SECURITY ---
-st.set_page_config(page_title="Albeee Einstein - UoN", page_icon="⚛️")
+# --- SECURE API KEY ---
+# This pulls the key you just put in the 'Advanced Settings' (Secrets)
+if "GEMINI_API_KEY" in st.secrets:
+    os.environ["GOOGLE_API_KEY"] = st.secrets["GEMINI_API_KEY"]
 
-# Use st.secrets for the API Key (Secure!)
-# This prevents the key from being hardcoded in your agent.py
-os.environ["GOOGLE_API_KEY"] = st.secrets["GEMINI_API_KEY"]
+st.set_page_config(page_title="Albeee Einstein", page_icon="⚛️")
+st.title("Einstein UoN Ambassador")
 
-st.title("Albeee Einstein: UoN Ambassador")
-st.write("Ask me anything about Physics at Nottingham!")
+# --- INITIALIZE RUNNER ---
+# The Runner manages the execution and session history
+if "runner" not in st.session_state:
+    st.session_state.runner = InMemoryRunner(agent=root_agent)
 
-# --- 2. CHAT HISTORY ---
+# Chat history initialization
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display chat history
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+# Display history
+for msg in st.session_state.messages:
+    st.chat_message(msg["role"]).write(msg["content"])
 
-# --- 3. CHAT INPUT ---
-if prompt := st.chat_input("Guten Tag! What would you like to know about the University of Nottingham and the School of Physics and Astronomy?"):
+# --- CHAT INPUT & EXECUTION ---
+if prompt := st.chat_input("Ask about Physics at Nottingham..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
+    st.chat_message("user").write(prompt)
 
-    with st.chat_message("assistant"):
-        # Calling the agent from your student's agent.py
-        response = root_agent.run(prompt)
-        full_text = response.text
+    # Format the message for ADK
+    user_message = types.Content(
+        role="user",
+        parts=[types.Part(text=prompt)]
+    )
+
+    with st.spinner("Einstein is thinking..."):
+        # The ADK Runner requires a user_id and session_id to track the chat
+        event_stream = st.session_state.runner.run(
+            user_id="streamlit_user",
+            session_id="current_chat",
+            new_message=user_message
+        )
         
-        st.markdown(full_text)
-        st.session_state.messages.append({"role": "assistant", "content": full_text})
+        # Collect the final text response from the event stream
+        answer = ""
+        for event in event_stream:
+            if event.is_final_response():
+                answer = event.content.parts[0].text
 
-        # --- 4. THE TALKING HEAD (Piper) ---
-        # When you're ready to integrate the voice:
-        # audio_path = generate_piper_audio(full_text) 
-        # st.audio(audio_path, autoplay=True)
+    if answer:
+        st.session_state.messages.append({"role": "assistant", "content": answer})
+        st.chat_message("assistant").write(answer)
