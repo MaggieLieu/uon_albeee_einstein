@@ -73,8 +73,8 @@ if prompt := st.chat_input("Ask me about Physics & Astronomy at UoN..."):
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
             try:
-                # Send message to agent
-                response = root_agent.send_message(prompt)
+                # Generate response using the agent
+                response = root_agent.generate_content(prompt)
                 
                 # Extract the text response
                 response_text = response.text if hasattr(response, 'text') else str(response)
