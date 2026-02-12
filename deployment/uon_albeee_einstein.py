@@ -1,6 +1,6 @@
 import streamlit as st
 import os
-from agent import root_agent
+from uon_agent_albeee.agent import root_agent
 
 # Set up API key
 # Option 1: From Streamlit secrets
