@@ -4,6 +4,7 @@ annotated-types==0.7.0
 anyio==4.11.0
 attrs==25.4.0
 Authlib==1.6.5
+asyncio
 cachetools==6.2.2
 certifi==2025.11.12
 cffi==2.0.0
