@@ -18,7 +18,30 @@ elif "GOOGLE_API_KEY" not in os.environ:
         st.rerun()
     else:
         st.stop()
+        
+# 1. Helper to handle the async generator
+async def get_agent_response(prompt):
+    runner = InMemoryRunner(agent=root_agent)
+    
+    # Wrap the prompt in the required ADK Content structure
+    user_content = types.Content(
+        role="user",
+        parts=[types.Part.from_text(text=prompt)]
+    )
 
+    response_text = ""
+    # Iterate through the event stream
+    async for event in runner.run(
+        user_id="uon_student",
+        session_id="chat_session_1", # Keep this constant to maintain context
+        new_message=user_content
+    ):
+        # We are looking for the final response event
+        if event.is_final_response() and event.content.parts:
+            response_text = event.content.parts[0].text
+            break 
+            
+    return response_text
 # Page configuration
 st.set_page_config(
     page_title="Albeee Einstein - UoN Physics Assistant",
@@ -75,38 +98,16 @@ if prompt := st.chat_input("Ask me about Physics & Astronomy at UoN..."):
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
             try:
-                # 1. Initialize the runner with your agent
-                runner = InMemoryRunner(agent=root_agent)
+                # Run the async helper in a synchronous way
+                response_text = asyncio.run(get_agent_response(prompt))
                 
-                # 2. Format the message correctly for ADK
-                user_content = types.Content(
-                    role="user",
-                    parts=[types.Part.from_text(text=prompt)]
-                )
-    
-                # 3. Run the agent (use session_id to maintain history if desired)
-                # For a simple stateless feel, you can use a fixed session_id
-                events = runner.run(
-                    user_id="streamlit_user",
-                    session_id="default_session",
-                    new_message=user_content
-                )
-    
-                response_text = ""
-                for event in events:
-                    # Check for the final text response from the agent
-                    if event.is_final_response() and event.content.parts:
-                        response_text = event.content.parts[0].text
-                
-                if not response_text:
-                    response_text = "I couldn't generate a response."
-    
-                # 4. Display and save the response
-                st.markdown(response_text)
-                st.session_state.messages.append({"role": "assistant", "content": response_text})
-
+                if response_text:
+                    st.markdown(response_text)
+                    st.session_state.messages.append({"role": "assistant", "content": response_text})
+                else:
+                    st.error("The agent didn't return a final response. Check if the tool execution failed.")
             except Exception as e:
-                st.error(f"Error: {str(e)}")
+                st.error(f"Error: {e}")
 
 # Sidebar with additional info
 with st.sidebar:
