@@ -3,6 +3,7 @@ import os
 from uon_agent_albeee.agent import root_agent
 from google.adk.runners import InMemoryRunner
 from google.genai import types
+import asyncio
 
 # Set up API key
 # Option 1: From Streamlit secrets
