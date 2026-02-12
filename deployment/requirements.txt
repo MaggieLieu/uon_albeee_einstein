@@ -102,6 +102,7 @@ SpeechRecognition==3.14.4
 SQLAlchemy==2.0.44
 sqlalchemy-spanner==1.17.1
 sqlparse==0.5.3
+streamlit
 sse-starlette==3.0.3
 starlette==0.48.0
 sympy==1.14.0
